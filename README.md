@@ -6,9 +6,8 @@
 </head>
 <body>
   <h1>Computer Network PA - README</h1>
-  <p>Wireless Mobile Network course programming assignments and a final project.</p>
-  <p>&nbsp;&nbsp;&nbsp;PA1 is written in Python.</p>
-  <p>&nbsp;&nbsp;&nbsp;PA2 - PA4 is written in Matlab.</p>
+  <p>Computer Network course programming assignments.</p>
+  <p>&nbsp;&nbsp;&nbsp;PA2 - PA9 is written in Golang.</p>
 
   <h2>Table of Contents</h2>
   <ul>
