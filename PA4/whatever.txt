@@ -1,0 +1,55 @@
+1 package main 
+2 import "fmt"
+3 import "os"
+4 import "strconv"
+5 import "net"
+6 import "bufio"
+7 
+8 func check(e error) {
+9 	if e != nil {
+10 		panic(e)
+11 	}
+12 }
+13 
+14 func main(){
+15 	//connects to the server
+16 	conn, errc := net.Dial("tcp", "127.0.0.1:1000")
+17 	check(errc)
+18 	defer conn.Close()
+19 	
+20 	
+21 	// prompts the user for the upload filename
+22 	inputFilename := ""
+23 	fmt.Printf("Please input the filename you want to read: ")
+24 	fmt.Scanf("%s", &inputFilename)
+25 	
+26 	inputFile, err := os.Open(inputFilename)
+27 	check(err)
+28 	defer inputFile.Close()
+29 	
+30 	// start up an output buffer for the tcp socket("conn")
+31 	writer := bufio.NewWriter(conn)
+32 	// open input buffer for file io
+33 	scanner := bufio.NewScanner(inputFile)
+34 	
+35 	
+36 	// send file size
+37 	fi, _ := inputFile.Stat()
+38 	fmt.Printf("from client: " + strconv.Itoa(int(fi.Size())) + "\n")
+39 	_, errw := writer.WriteString(strconv.Itoa(int(fi.Size())) + "\n")
+40 	check(errw)
+41 	
+42 	// read file
+43 	for scanner.Scan() {	
+44 		_, errs := writer.WriteString(scanner.Text() +"\n")
+45 		check(errs)
+46 	}
+47 	// end of buffer writing
+48 	writer.Flush()
+49 	
+50 	// receive a msg from server
+51 	scanner = bufio.NewScanner(conn)
+52 	if scanner.Scan() {
+53 		fmt.Printf("Server replies: %s\n", scanner.Text())
+54 	}
+55 }
